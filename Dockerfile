@@ -1,7 +1,7 @@
 # Use the official Debian image
 FROM debian:bullseye-slim
 
-# Install dependencies including LibreOffice and curl
+# Install dependencies, including LibreOffice and curl
 RUN apt-get update && \
     apt-get install -y \
     libreoffice \
@@ -10,7 +10,8 @@ RUN apt-get update && \
     npm \
     && apt-get clean
 
-RUN libreoffice --version
+# Add LibreOffice to PATH (if needed)
+ENV PATH="/usr/lib/libreoffice/program:$PATH"
 
 # Set up the working directory
 WORKDIR /app
@@ -20,6 +21,9 @@ COPY backend/ .
 
 # Install backend dependencies
 RUN npm install
+
+# Log available binaries for debugging
+RUN ls /usr/bin
 
 # Expose port 3001 for the backend API
 EXPOSE 3001
