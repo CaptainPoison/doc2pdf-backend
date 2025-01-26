@@ -17,8 +17,8 @@ WORKDIR /app
 # Copy backend code into the container
 COPY backend/ .
 
-# Create the uploads directory and give it the correct permissions
-RUN mkdir /app/uploads && chmod 777 /app/uploads
+# Ensure the uploads directory exists and has the correct permissions
+RUN mkdir -p /app/uploads && chmod 777 /app/uploads
 
 # Install backend dependencies
 RUN npm install
