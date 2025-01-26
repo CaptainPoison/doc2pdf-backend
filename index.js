@@ -20,6 +20,7 @@ app.use(express.json());
 
 // API Endpoint: Convert Word Document to PDF
 app.post("/convert", upload.single("file"), async (req, res) => {
+  let pdfPath = null;
   try {
     const file = req.file;
 
@@ -35,19 +36,21 @@ app.post("/convert", upload.single("file"), async (req, res) => {
     }
 
     // Convert the Word document to PDF
-    const pdfPath = await convertToPdf(file.path);
+    pdfPath = await convertToPdf(file.path);
 
     // Send the converted PDF to the client
     res.download(pdfPath, "converted.pdf", (err) => {
-      if (err) console.error(err);
-
-      // Clean up temporary files
-      fs.unlinkSync(file.path);
-      fs.unlinkSync(pdfPath);
+      if (err) {
+        console.error("Error sending file:", err);
+      }
     });
   } catch (err) {
-    console.error(err);
+    console.error("Error converting file:", err);
     res.status(500).send("Error converting file.");
+  } finally {
+    // Clean up temporary files
+    if (req.file) fs.unlinkSync(req.file.path);
+    if (pdfPath) fs.unlinkSync(pdfPath);
   }
 });
 
@@ -56,11 +59,7 @@ app.get("/", (req, res) => {
   res.send("Word-to-PDF converter backend is running.");
 });
 
+// Start the server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Backend is listening on port ${PORT}`);
 });
