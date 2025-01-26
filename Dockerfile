@@ -10,6 +10,8 @@ RUN apt-get update && \
     npm \
     && apt-get clean
 
+RUN libreoffice --version
+
 # Set up the working directory
 WORKDIR /app
 
