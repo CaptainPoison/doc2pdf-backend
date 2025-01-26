@@ -8,7 +8,8 @@ RUN apt-get update && \
     curl \
     nodejs \
     npm \
-    && apt-get clean
+    && apt-get clean \
+    && libreoffice --version  # Check if libreoffice is installed
 
 # Add LibreOffice to PATH (if needed)
 ENV PATH="/usr/lib/libreoffice/program:$PATH"
@@ -21,9 +22,6 @@ COPY backend/ .
 
 # Install backend dependencies
 RUN npm install
-
-# Log available binaries for debugging
-RUN ls /usr/bin
 
 # Expose port 3001 for the backend API
 EXPOSE 3001
