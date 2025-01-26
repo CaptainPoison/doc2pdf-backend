@@ -42,15 +42,20 @@ app.post("/convert", upload.single("file"), async (req, res) => {
     res.download(pdfPath, "converted.pdf", (err) => {
       if (err) {
         console.error("Error sending file:", err);
+        return;
       }
+
+      // Clean up temporary files after the file is successfully downloaded
+      fs.unlink(file.path, (unlinkErr) => {
+        if (unlinkErr) console.error(`Failed to delete uploaded file: ${unlinkErr}`);
+      });
+      fs.unlink(pdfPath, (unlinkErr) => {
+        if (unlinkErr) console.error(`Failed to delete PDF: ${unlinkErr}`);
+      });
     });
   } catch (err) {
     console.error("Error converting file:", err);
     res.status(500).send("Error converting file.");
-  } finally {
-    // Clean up temporary files
-    if (req.file) fs.unlinkSync(req.file.path);
-    if (pdfPath) fs.unlinkSync(pdfPath);
   }
 });
 
