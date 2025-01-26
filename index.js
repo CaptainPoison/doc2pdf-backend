@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
+const cors = require("cors");
 const { convertToPdf } = require("./converters/libreoffice");
 
 const app = express();
@@ -9,6 +10,11 @@ const PORT = process.env.PORT || 3001;
 
 // Configure Multer for file uploads
 const upload = multer({ dest: "uploads/" });
+
+// Use CORS middleware to allow frontend to access the backend
+app.use(cors({
+  origin: 'https://doc2pdf-frontend.onrender.com', // Allow only your frontend URL to access
+}));
 
 app.use(express.json());
 
@@ -49,6 +55,11 @@ app.post("/convert", upload.single("file"), async (req, res) => {
 app.get("/", (req, res) => {
   res.send("Word-to-PDF converter backend is running.");
 });
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
