@@ -11,8 +11,6 @@ const PORT = process.env.PORT || 3001;
 // Configure Multer for file uploads
 const upload = multer({ dest: "uploads/" });
 
-const { convertToPdf } = require("./converters/libreoffice");
-
 // Use CORS middleware to allow frontend to access the backend
 app.use(cors({
   origin: 'https://doc2pdf-frontend.onrender.com', // Allow only your frontend URL to access
