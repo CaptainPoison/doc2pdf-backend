@@ -1,25 +1,25 @@
-# Base image with Node.js and LibreOffice installed
+# Use the official Debian image
 FROM debian:bullseye-slim
 
-# Install dependencies and LibreOffice
+# Install dependencies including LibreOffice and curl
 RUN apt-get update && \
-    apt-get install -y curl libreoffice && \
-    apt-get clean
+    apt-get install -y \
+    libreoffice \
+    curl \
+    nodejs \
+    npm \
+    && apt-get clean
 
-# Set up Node.js environment
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs
-
-# Set the working directory
+# Set up the working directory
 WORKDIR /app
 
-# Copy the backend code into the container
+# Copy backend code into the container
 COPY backend/ .
 
 # Install backend dependencies
 RUN npm install
 
-# Expose the backend port (assuming your backend runs on port 3001)
+# Expose port 3001 for the backend API
 EXPOSE 3001
 
 # Start the application
