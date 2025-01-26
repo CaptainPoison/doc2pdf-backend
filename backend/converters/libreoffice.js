@@ -23,3 +23,4 @@ const convertToPdf = (inputPath) => {
   });
 };
 
+module.exports = { convertToPdf };
